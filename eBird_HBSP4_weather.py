@@ -73,7 +73,7 @@ def main():
     site = "Hamlin Beach SP--Parking Lot No. 4 (Primary Lakewatch site)"
     lat_input = eBird_location_value('lat', hotspot_data, site)
     lon_input = eBird_location_value('lng', hotspot_data, site)
-    st.write(lat_input, lon_input)
+    # st.write(lat_input, lon_input)
     get_info(lat_input, lon_input)
 
 
