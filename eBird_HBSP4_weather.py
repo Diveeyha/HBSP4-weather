@@ -61,7 +61,7 @@ def get_info(lat, lon):
     else:
         vis = "10.0 mi"
     print_out = f'''NOAA
-{rounded_value}  \n{cloudiness}  \n{temp_F:.01f}F ({temp_C:.01f}C)
+{rounded_value} - 5hrs  \n{cloudiness}  \n{temp_F:.01f}F ({temp_C:.01f}C)
 Wind: {wind_speed}, {wind_dir}   \nChance of Precip: {precip}%
 Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
 
@@ -86,7 +86,7 @@ Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
             vis2 = i["visibility"] * 0.621371
 
     print_out2 = f'''Merry Sky
-{time2}  \n{cloudiness2}  \n{temp_F2:.01f}F ({temp_C2:.01f}C) 
+{time2} - 5hrs  \n{cloudiness2}  \n{temp_F2:.01f}F ({temp_C2:.01f}C) 
 Feels like: {feels_likeF:.01f}F ({feels_likeC:.01f}C)
 Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f} mph  \nChance of Precip: {precip2}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)  \nRel Humidity: {rel_hum2}%  \nVisibility: {vis2:.01f} mi'''
@@ -115,14 +115,15 @@ def location_value(col, hotspots, x, y):
 
 
 def main():
-    st.title("Hamlin Beach SP--No. 4 Weather")
+    # st.title("Weather")
+    st.subheader("Hamlin Beach SP--No. 4")
     state = "NY"
     hotspot_data = load_eBird_hotspots(state)
 
     site = "Hamlin Beach SP--Parking Lot No. 4 (Primary Lakewatch site)"
     lat_input = location_value('lat', hotspot_data, 'locName', site)
     lon_input = location_value('lng', hotspot_data, 'locName', site)
-    st.write(lat_input, lon_input)
+    # st.write(lat_input, lon_input)
     get_info(lat_input, lon_input)
 
 
