@@ -60,8 +60,8 @@ def get_info(lat, lon):
         vis = "1.2 - 3.1 mi (2 - 5 km)"
     else:
         vis = "10.0 mi"
-    print_out = f'''NOAA
-{rounded_value} - 5hrs  \n{cloudiness}  \n{temp_F:.01f}F ({temp_C:.01f}C)
+    print_out = f'''
+{cloudiness}  \n{temp_F:.01f}F ({temp_C:.01f}C)
 Wind: {wind_speed}, {wind_dir}   \nChance of Precip: {precip}%
 Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
 
@@ -85,15 +85,19 @@ Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
             cloudiness2 = i["summary"]
             vis2 = i["visibility"] * 0.621371
 
-    print_out2 = f'''Merry Sky
-{time2} - 5hrs  \n{cloudiness2}  \n{temp_F2:.01f}F ({temp_C2:.01f}C) 
+    print_out2 = f'''
+{cloudiness2}  \n{temp_F2:.01f}F ({temp_C2:.01f}C) 
 Feels like: {feels_likeF:.01f}F ({feels_likeC:.01f}C)
 Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f} mph  \nChance of Precip: {precip2}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)  \nRel Humidity: {rel_hum2}%  \nVisibility: {vis2:.01f} mi'''
 
     col1, col2 = st.columns(2)
-    col1.code(print_out, language='None')
-    col2.code(print_out2, language='None')
+    with col1:
+        st.write(f"NOAA  \n{rounded_value} - 5hrs")
+        st.code(print_out, language='None')
+    with col2:
+        st.write(f"Merry Sky  \n{time2} - 5hrs")
+        st.code(print_out2, language='None')
 
 
 def degToCompass(num):
