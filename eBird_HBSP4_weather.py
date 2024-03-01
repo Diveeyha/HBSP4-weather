@@ -38,11 +38,11 @@ def get_info(lat, lon):
     rounded_value = now.replace(second=0, microsecond=0, minute=0,
                                 hour=now.hour)
     # now = now.strftime('%H:%M:%S')
-    if rounded_value == date_start:
-        i = 0
-    else:
-        i = 1
-
+    # if rounded_value == date_start:
+    #     i = 0
+    # else:
+    #     i = 1
+    i = 0
     temp_F = get_hourly[i]["temperature"]
     temp_C = (temp_F - 32) * 5/9
     precip = get_hourly[i]["probabilityOfPrecipitation"]["value"]
