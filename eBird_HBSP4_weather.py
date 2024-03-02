@@ -8,7 +8,7 @@ from time import sleep
 from datetime import datetime, timedelta
 
 
-@st.cache_data(ttl=60*60)
+@st.cache_data(ttl=60*10)
 def get_NOAA(lat, lon):
     resp = requests.get(f"https://api.weather.gov/points/{lat},{lon}")
     first_page = resp.json()
@@ -17,10 +17,10 @@ def get_NOAA(lat, lon):
     resp2 = requests.get(first_link)
     second_page = resp2.json()
     NOAA_hourly = second_page.get("properties").get("periods")
-    start_time = NOAA_hourly[0]["startTime"]
-    clean_str = start_time.replace('T', ' ')
+    NOAA_start = NOAA_hourly[0]["startTime"]
+    clean_str = NOAA_start.replace('T', ' ')
     NOAA_time = re.sub(r"-[0-9][0-9]:00", '', clean_str)
-    return NOAA_hourly, NOAA_time
+    return NOAA_hourly, NOAA_start, NOAA_time
 
 
 @st.cache_data(ttl=60*60)
@@ -32,26 +32,31 @@ def get_merry_sky(lat, lon):
 
 
 def get_info(lat, lon):
-    get_hourly, clean_time = get_NOAA(lat, lon)
-    date_start = datetime.strptime(clean_time, '%Y-%m-%d %H:%M:%S')
+    NOAA_hourly, NOAA_start, NOAA_time = get_NOAA(lat, lon)
+    date_start = datetime.strptime(NOAA_time, '%Y-%m-%d %H:%M:%S')
     now = datetime.now()
     rounded_value = now.replace(second=0, microsecond=0, minute=0,
                                 hour=now.hour)
     # now = now.strftime('%H:%M:%S')
-    # if rounded_value == date_start:
-    #     i = 0
-    # else:
-    #     i = 1
-    i = 0
-    temp_F = get_hourly[i]["temperature"]
+
+    if rounded_value == date_start:
+        i = 0
+    else:
+        i = 1
+    # st.write(i, date_start, now, rounded_value, NOAA_start)
+    # for i in NOAA_hourly:
+    #     if i["time"] == adj_now:
+
+    # NOAA_hourly[i]["startTime"] == NOAA_start
+    temp_F = NOAA_hourly[i]["temperature"]
     temp_C = (temp_F - 32) * 5/9
-    precip = get_hourly[i]["probabilityOfPrecipitation"]["value"]
-    dewpoint_C = get_hourly[i]["dewpoint"]["value"]
+    precip = NOAA_hourly[i]["probabilityOfPrecipitation"]["value"]
+    dewpoint_C = NOAA_hourly[i]["dewpoint"]["value"]
     dewpoint_F = (dewpoint_C * 1.8) + 32
-    rel_hum = get_hourly[i]["relativeHumidity"]["value"]
-    wind_speed = get_hourly[i]["windSpeed"]
-    wind_dir = get_hourly[i]["windDirection"]
-    cloudiness = get_hourly[i]["shortForecast"]
+    rel_hum = NOAA_hourly[i]["relativeHumidity"]["value"]
+    wind_speed = NOAA_hourly[i]["windSpeed"]
+    wind_dir = NOAA_hourly[i]["windDirection"]
+    cloudiness = NOAA_hourly[i]["shortForecast"]
     if cloudiness == "fog":
         vis = "< 3,300 ft (1 km)"
     elif cloudiness == "mist":
@@ -88,7 +93,7 @@ Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
     print_out2 = f'''
 {cloudiness2}  \n{temp_F2:.01f}F ({temp_C2:.01f}C) 
 Feels like: {feels_likeF:.01f}F ({feels_likeC:.01f}C)
-Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f} mph  \nChance of Precip: {precip2}%
+Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f} mph  \nChance of Precip: {precip2:.01f}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)  \nRel Humidity: {rel_hum2}%  \nVisibility: {vis2:.01f} mi'''
 
     col1, col2 = st.columns(2)
