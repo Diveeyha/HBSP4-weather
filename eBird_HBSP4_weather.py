@@ -8,34 +8,32 @@ import time
 from random import randint
 from time import sleep
 from datetime import datetime, timedelta
-# from timezonefinder import TimezoneFinder
+from timezonefinder import TimezoneFinder
 
-
-import pytz
-from typing import Optional
 from datetime import datetime
+from dateutil import tz
+
+def get_timezone(lat, lng):
+    tf = TimezoneFinder()
+    tz = tf.timezone_at(lat=lat, lng=lng)
+    return tz
 
 
 
+# class BritishTime(datetime):
+#     timezone = pytz.timezone('America/New_York')
+#
+#     @classmethod
+#     def dst(cls, dt: Optional[datetime] = None):
+#         dt = dt if dt is not None else cls.now()
+#         return cls.timezone.dst(dt)
+#
 
-
-class BritishTime(datetime):
-    timezone = pytz.timezone('America/New_York')
-
-    @classmethod
-    def dst(cls, dt: Optional[datetime] = None):
-        dt = dt if dt is not None else cls.now()
-        return cls.timezone.dst(dt)
-
-    # def get_timezone(lat, lng):
-    #     tf = TimezoneFinder()
-    #     tz = tf.timezone_at(lat=lat, lng=lng)
-    #     return tz
-
-def get_correct_time(timestamp):
-    # time_zone = BritishTime.get_timezone(lat, lng)
-    updated = BritishTime.fromtimestamp(timestamp)
-    return updated + updated.dst()
+#
+# def get_correct_time(timestamp):
+#     # time_zone = BritishTime.get_timezone(lat, lng)
+#     updated = BritishTime.fromtimestamp(timestamp)
+#     return updated + updated.dst()
 
 
 
@@ -53,12 +51,12 @@ def get_correct_time(timestamp):
 #     return dt.replace(tzname=tz)
 
 
-def is_dst(dt=None, timezone="UTC"):
-    if dt is None:
-        dt = datetime.utcnow()
-    timezone = pytz.timezone(timezone)
-    timezone_aware_date = timezone.localize(dt, is_dst=None)
-    return timezone_aware_date.tzinfo._dst.seconds != 0
+# def is_dst(dt=None, timezone="UTC"):
+#     if dt is None:
+#         dt = datetime.utcnow()
+#     timezone = pytz.timezone(timezone)
+#     timezone_aware_date = timezone.localize(dt, is_dst=None)
+#     return timezone_aware_date.tzinfo._dst.seconds != 0
 
 
 # @st.cache_data(ttl=60*10)
@@ -157,7 +155,8 @@ Precip: {precip2:.01f}%, {precip_amount2:.01f}in of {precip_type2}
 Rel Humidity: {rel_hum2}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
 Visibility: {vis2:.01f}mi
-Updated: {get_correct_time(adj_now)}'''
+Updated: {time2.astimezone(tz.gettz(get_timezone(lat, lon)))}
+Updated: {time2}'''
 
     # col1, col2 = st.columns(2)
     # with col1:
