@@ -1,18 +1,8 @@
 import streamlit as st
 import json
 import requests
-import pytz
-import time
-from datetime import datetime, timedelta
-# from timezonefinder import TimezoneFinder
-import math
 from datetime import datetime
 from dateutil import tz
-
-# def get_timezone(lat, lng):
-#     tf = TimezoneFinder()
-#     tz = tf.timezone_at(lat=lat, lng=lng)
-#     return tz
 
 
 @st.cache_data(ttl=60*60)
@@ -28,7 +18,6 @@ def get_info(lat, lon):
     rounded_value = now.replace(second=0, microsecond=0, minute=0, hour=now.hour)
     m_hourly = get_merry_sky(lat, lon)
     adj_now = rounded_value.timestamp()
-    # time = datetime.fromtimestamp(adj_now).strftime('%Y-%m-%d %H:%M:%S')
     time = datetime.fromtimestamp(adj_now)
     for i in m_hourly:
         if i["time"] == adj_now:
@@ -95,5 +84,5 @@ def main():
 
 # Run main
 if __name__ == "__main__":
-    st.set_page_config(page_icon='🐦', initial_sidebar_state='expanded')
+    st.set_page_config(page_icon='💨', initial_sidebar_state='expanded')
     main()
