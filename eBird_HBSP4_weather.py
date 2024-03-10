@@ -1,15 +1,11 @@
 import streamlit as st
-import os
 import json
-import re
 import requests
 import pytz
 import time
-from random import randint
-from time import sleep
 from datetime import datetime, timedelta
 # from timezonefinder import TimezoneFinder
-
+import math
 from datetime import datetime
 from dateutil import tz
 
@@ -17,21 +13,6 @@ from dateutil import tz
 #     tf = TimezoneFinder()
 #     tz = tf.timezone_at(lat=lat, lng=lng)
 #     return tz
-
-
-# @st.cache_data(ttl=60*10)
-# def get_NOAA(lat, lon):
-#     resp = requests.get(f"https://api.weather.gov/points/{lat},{lon}")
-#     first_page = resp.json()
-#     first_link = first_page.get("properties").get("forecastHourly")
-#     sleep(randint(1, 5))
-#     resp2 = requests.get(first_link)
-#     second_page = resp2.json()
-#     NOAA_hourly = second_page.get("properties").get("periods")
-#     NOAA_start = NOAA_hourly[0]["startTime"]
-#     clean_str = NOAA_start.replace('T', ' ')
-#     NOAA_time = re.sub(r"-[0-9][0-9]:00", '', clean_str)
-#     return NOAA_hourly, NOAA_start, NOAA_time
 
 
 @st.cache_data(ttl=60*60)
@@ -43,84 +24,42 @@ def get_merry_sky(lat, lon):
 
 
 def get_info(lat, lon):
-    # NOAA_hourly, NOAA_start, NOAA_time = get_NOAA(lat, lon)
-    # date_start = datetime.strptime(NOAA_time, '%Y-%m-%d %H:%M:%S')
-
-    # now = now.strftime('%H:%M:%S')
-
-    # if rounded_value == date_start:
-    #     i = 0
-    # else:
-    #     i = 1
-    # st.write(i, date_start, now, rounded_value, NOAA_start)
-    # for i in NOAA_hourly:
-    #     if i["time"] == adj_now:
-
-    # NOAA_hourly[i]["startTime"] == NOAA_start
-#     temp_F = NOAA_hourly[i]["temperature"]
-#     temp_C = (temp_F - 32) * 5/9
-#     precip = NOAA_hourly[i]["probabilityOfPrecipitation"]["value"]
-#     dewpoint_C = NOAA_hourly[i]["dewpoint"]["value"]
-#     dewpoint_F = (dewpoint_C * 1.8) + 32
-#     rel_hum = NOAA_hourly[i]["relativeHumidity"]["value"]
-#     wind_speed = NOAA_hourly[i]["windSpeed"]
-#     wind_dir = NOAA_hourly[i]["windDirection"]
-#     cloudiness = NOAA_hourly[i]["shortForecast"]
-#     if cloudiness == "fog":
-#         vis = "< 3,300 ft (1 km)"
-#     elif cloudiness == "mist":
-#         vis = "0.62 - 1.2 mi (1 - 2 km)"
-#     elif cloudiness == "haze":
-#         vis = "1.2 - 3.1 mi (2 - 5 km)"
-#     else:
-#         vis = "10.0 mi"
-#     print_out = f'''
-# {cloudiness}  \n{temp_F:.01f}F ({temp_C:.01f}C)
-# Wind: {wind_speed}, {wind_dir}   \nChance of Precip: {precip}%
-# Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
     now = datetime.now()
     rounded_value = now.replace(second=0, microsecond=0, minute=0, hour=now.hour)
     m_hourly = get_merry_sky(lat, lon)
     adj_now = rounded_value.timestamp()
-    # time2 = datetime.fromtimestamp(adj_now).strftime('%Y-%m-%d %H:%M:%S')
-    time2 = datetime.fromtimestamp(adj_now)
+    # time = datetime.fromtimestamp(adj_now).strftime('%Y-%m-%d %H:%M:%S')
+    time = datetime.fromtimestamp(adj_now)
     for i in m_hourly:
         if i["time"] == adj_now:
-            temp_C2 = i["temperature"]
-            temp_F2 = (temp_C2 * 9/5) + 32
+            temp_C = i["temperature"]
+            temp_F = (temp_C * 9/5) + 32
             feels_likeC = i["apparentTemperature"]
             feels_likeF = (feels_likeC * 9 / 5) + 32
-            precip2 = i["precipProbability"] * 100
-            dewpoint_C2 = i["dewPoint"]
-            dewpoint_F2 = (dewpoint_C2 * 1.8) + 32
-            rel_hum2 = i["humidity"] * 100
-            wind_speed2 = i["windSpeed"] * 2.23694
-            wind_gust2 = i["windGust"] * 2.23694
-            windBearing2 = i["windBearing"]
-            wind_dir2 = degToCompass(windBearing2)
-            cloudiness2 = i["summary"]
-            cloud_cover2 = i["cloudCover"] * 100
-            vis2 = i["visibility"] * 0.621371
-            # uv_index2 = i["uvIndex"]
-            precip_amount2 = i["precipAccumulation"]/25.4
-            precip_type2 = i["precipType"]
+            precip = i["precipProbability"] * 100
+            dewpoint_C = i["dewPoint"]
+            dewpoint_F = (dewpoint_C * 1.8) + 32
+            rel_hum = i["humidity"] * 100
+            wind_speed = i["windSpeed"] * 2.23694
+            wind_gust = i["windGust"] * 2.23694
+            windBearing = i["windBearing"]
+            wind_dir = degToCompass(windBearing)
+            cloudiness = i["summary"]
+            cloud_cover = i["cloudCover"] * 100
+            vis = i["visibility"] * 0.621371
+            precip_amount = round(i["precipAccumulation"]/25.4, 1)
+            precip_type = i["precipType"]
 
     print_out2 = f'''
-{cloudiness2}, {temp_F2:.01f}F/{temp_C2:.01f}C
+{cloudiness}, {temp_F:.01f}F/{temp_C:.01f}C
 Feel: {feels_likeF:.01f}F/{feels_likeC:.01f}C 
-Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f}mph
-Clouds: {cloud_cover2}%
-Precip: {precip2:.01f}%, {precip_amount2:.01f}in of {precip_type2}
-Rel Humidity: {rel_hum2}%
-Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
-Visibility: {vis2:.01f}mi
-Last update: {time2.astimezone(tz.gettz('America/New_York'))}'''
-
-    # col1, col2 = st.columns(2)
-    # with col1:
-    #     st.write(f"NOAA  \n{rounded_value} - 5hrs")
-    #     st.code(print_out, language='None')
-    # with col2:
+Wind: {wind_dir}, {wind_speed:.01f} - {wind_gust:.01f}mph
+Clouds: {cloud_cover}%
+Precip: {precip:.01f}%{'' if precip_amount < 0.1 else f", {precip_amount}in of {precip_type}"}
+Rel Humidity: {rel_hum}%
+Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)
+Visibility: {vis:.01f}mi
+Last update: {time.astimezone(tz.gettz('America/New_York')).strftime('%Y-%m-%d %H:%M:%S')}'''
 
     st.code(print_out2, language='None')
 
@@ -144,7 +83,6 @@ def location_value(col, hotspots, x, y):
 
 
 def main():
-    # st.title("Weather")
     st.subheader(f"WEATHER: [Hamlin Beach SP #4](https://ebird.org/hotspot/L139811)")
     state = "NY"
     hotspot_data = load_eBird_hotspots(state)
@@ -152,14 +90,10 @@ def main():
     site = "Hamlin Beach SP--Parking Lot No. 4 (Primary Lakewatch site)"
     lat_input = location_value('lat', hotspot_data, 'locName', site)
     lon_input = location_value('lng', hotspot_data, 'locName', site)
-    # col1, col2 = st.columns(2)
-    # col1.subheader(f"[Hamlin Beach SP--No. 4](https://ebird.org/hotspot/L139811)")
-    # col2.code(f"{lat_input, lon_input}", language='None')
     get_info(lat_input, lon_input)
 
 
 # Run main
 if __name__ == "__main__":
     st.set_page_config(page_icon='🐦', initial_sidebar_state='expanded')
-
     main()
