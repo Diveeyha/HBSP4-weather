@@ -3,10 +3,22 @@ import os
 import json
 import re
 import requests
+import pytz
+import time
 from random import randint
 from time import sleep
 from datetime import datetime, timedelta
+from tzlocal import get_localzone
 
+def to_local(dt):
+    """From any timezone to local datetime - also cope with DST"""
+    localtime = time.localtime()
+    if localtime.tm_isdst:
+        utctime = time.gmtime()
+        hours_delta = timedelta(hours=(localtime.tm_hour - utctime.tm_hour))
+        dt = dt - hours_delta
+
+    return dt.replace(tzinfo=get_localzone())
 
 # @st.cache_data(ttl=60*10)
 # def get_NOAA(lat, lon):
@@ -22,6 +34,13 @@ from datetime import datetime, timedelta
 #     NOAA_time = re.sub(r"-[0-9][0-9]:00", '', clean_str)
 #     return NOAA_hourly, NOAA_start, NOAA_time
 
+
+def is_dst(dt=None, timezone="UTC"):
+    if dt is None:
+        dt = datetime.utcnow()
+    timezone = pytz.timezone(timezone)
+    timezone_aware_date = timezone.localize(dt, is_dst=None)
+    return timezone_aware_date.tzinfo._dst.seconds != 0
 
 @st.cache_data(ttl=60*60)
 def get_merry_sky(lat, lon):
@@ -110,7 +129,7 @@ Visibility: {vis2:.01f}mi'''
     #     st.write(f"NOAA  \n{rounded_value} - 5hrs")
     #     st.code(print_out, language='None')
     # with col2:
-    st.write(f"{time2} - 4hrs")
+    st.write(f"{to_local(time2)} - 4hrs")
     st.code(print_out2, language='None')
 
 
