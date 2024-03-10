@@ -145,7 +145,7 @@ def location_value(col, hotspots, x, y):
 
 def main():
     # st.title("Weather")
-    st.subheader(f"Weather: [Hamlin Beach SP--No. 4](https://ebird.org/hotspot/L139811)")
+    st.subheader(f"WEATHER: [Hamlin Beach SP--No. 4](https://ebird.org/hotspot/L139811)")
     state = "NY"
     hotspot_data = load_eBird_hotspots(state)
 
