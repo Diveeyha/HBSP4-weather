@@ -8,15 +8,15 @@ import time
 from random import randint
 from time import sleep
 from datetime import datetime, timedelta
-from timezonefinder import TimezoneFinder
+# from timezonefinder import TimezoneFinder
 
 from datetime import datetime
 from dateutil import tz
 
-def get_timezone(lat, lng):
-    tf = TimezoneFinder()
-    tz = tf.timezone_at(lat=lat, lng=lng)
-    return tz
+# def get_timezone(lat, lng):
+#     tf = TimezoneFinder()
+#     tz = tf.timezone_at(lat=lat, lng=lng)
+#     return tz
 
 
 
@@ -155,7 +155,7 @@ Precip: {precip2:.01f}%, {precip_amount2:.01f}in of {precip_type2}
 Rel Humidity: {rel_hum2}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
 Visibility: {vis2:.01f}mi
-Updated: {time2.astimezone(tz.gettz(get_timezone(lat, lon)))}
+Updated: {time2.astimezone(tz.gettz('America/New_York'))}
 Updated: {time2}'''
 
     # col1, col2 = st.columns(2)
