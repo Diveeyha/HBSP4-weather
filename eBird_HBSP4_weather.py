@@ -97,10 +97,10 @@ def get_info(lat, lon):
 
     print_out2 = f'''
 {cloudiness2}, {temp_F2:.01f}F/{temp_C2:.01f}C
-Feels like: {feels_likeF:.01f}F/{feels_likeC:.01f}C 
+Feel: {feels_likeF:.01f}F/{feels_likeC:.01f}C 
 Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f}mph
-% Cloud Cover: {cloud_cover2}%
-Chance of Precip: {precip2:.01f}% ({precip_amount2:.02f}in of {precip_type2})
+Clouds: {cloud_cover2}%
+Precip: {precip2:.01f}% ({precip_amount2:.01f}in of {precip_type2})
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
 Rel Humidity: {rel_hum2}%
 Visibility: {vis2:.01f}mi'''
@@ -115,8 +115,8 @@ Visibility: {vis2:.01f}mi'''
 
 
 def degToCompass(num):
-    val=int((num/22.5)+.5)
-    arr=["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
+    val = int((num/22.5)+.5)
+    arr = ["N", "NNE", "NE", "ENE", "E", "ESE", "SE", "SSE", "S", "SSW", "SW", "WSW", "W", "WNW", "NW", "NNW"]
     return arr[(val % 16)]
 
 
@@ -134,7 +134,7 @@ def location_value(col, hotspots, x, y):
 
 def main():
     # st.title("Weather")
-    st.subheader("Hamlin Beach SP--No. 4")
+    st.subheader("Weather: Hamlin Beach SP--No. 4")
     state = "NY"
     hotspot_data = load_eBird_hotspots(state)
 
