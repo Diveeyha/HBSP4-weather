@@ -53,9 +53,7 @@ def get_merry_sky(lat, lon):
 def get_info(lat, lon):
     # NOAA_hourly, NOAA_start, NOAA_time = get_NOAA(lat, lon)
     # date_start = datetime.strptime(NOAA_time, '%Y-%m-%d %H:%M:%S')
-    now = datetime.now()
-    rounded_value = now.replace(second=0, microsecond=0, minute=0,
-                                hour=now.hour)
+
     # now = now.strftime('%H:%M:%S')
 
     # if rounded_value == date_start:
@@ -88,11 +86,13 @@ def get_info(lat, lon):
 # {cloudiness}  \n{temp_F:.01f}F ({temp_C:.01f}C)
 # Wind: {wind_speed}, {wind_dir}   \nChance of Precip: {precip}%
 # Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)  \nRel Humidity: {rel_hum}%'''
-
+    now = datetime.now()
+    rounded_value = now.replace(second=0, microsecond=0, minute=0, hour=now.hour)
     m_hourly = get_merry_sky(lat, lon)
     adj_now = rounded_value.timestamp()
     print(adj_now)
-    time2 = datetime.fromtimestamp(adj_now).strftime('%Y-%m-%d %H:%M:%S')
+    # time2 = datetime.fromtimestamp(adj_now).strftime('%Y-%m-%d %H:%M:%S')
+    time2 = datetime.fromtimestamp(adj_now)
     for i in m_hourly:
         if i["time"] == adj_now:
             temp_C2 = i["temperature"]
@@ -119,17 +119,18 @@ def get_info(lat, lon):
 Feel: {feels_likeF:.01f}F/{feels_likeC:.01f}C 
 Wind: {wind_dir2}, {wind_speed2:.01f} - {wind_gust2:.01f}mph
 Clouds: {cloud_cover2}%
-Precip: {precip2:.01f}% ({precip_amount2:.01f}in of {precip_type2})
-Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
+Precip: {precip2:.01f}%, {precip_amount2:.01f}in of {precip_type2}
 Rel Humidity: {rel_hum2}%
-Visibility: {vis2:.01f}mi'''
+Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
+Visibility: {vis2:.01f}mi
+Updated: {to_local(time2)}'''
 
     # col1, col2 = st.columns(2)
     # with col1:
     #     st.write(f"NOAA  \n{rounded_value} - 5hrs")
     #     st.code(print_out, language='None')
     # with col2:
-    st.write(f"{to_local(time2)} - 4hrs")
+
     st.code(print_out2, language='None')
 
 
