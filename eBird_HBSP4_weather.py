@@ -19,46 +19,6 @@ from dateutil import tz
 #     return tz
 
 
-
-# class BritishTime(datetime):
-#     timezone = pytz.timezone('America/New_York')
-#
-#     @classmethod
-#     def dst(cls, dt: Optional[datetime] = None):
-#         dt = dt if dt is not None else cls.now()
-#         return cls.timezone.dst(dt)
-#
-
-#
-# def get_correct_time(timestamp):
-#     # time_zone = BritishTime.get_timezone(lat, lng)
-#     updated = BritishTime.fromtimestamp(timestamp)
-#     return updated + updated.dst()
-
-
-
-
-# def to_local(dt, lat, lng):
-#
-#     """From any timezone to local datetime - also cope with DST"""
-#     localtime = time.localtime()
-#     if localtime.tm_isdst:
-#         utctime = time.gmtime()
-#         hours_delta = timedelta(hours=(localtime.tm_hour - utctime.tm_hour))
-#         dt = dt - hours_delta
-#
-#
-#     return dt.replace(tzname=tz)
-
-
-# def is_dst(dt=None, timezone="UTC"):
-#     if dt is None:
-#         dt = datetime.utcnow()
-#     timezone = pytz.timezone(timezone)
-#     timezone_aware_date = timezone.localize(dt, is_dst=None)
-#     return timezone_aware_date.tzinfo._dst.seconds != 0
-
-
 # @st.cache_data(ttl=60*10)
 # def get_NOAA(lat, lon):
 #     resp = requests.get(f"https://api.weather.gov/points/{lat},{lon}")
@@ -155,8 +115,7 @@ Precip: {precip2:.01f}%, {precip_amount2:.01f}in of {precip_type2}
 Rel Humidity: {rel_hum2}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
 Visibility: {vis2:.01f}mi
-Updated: {time2.astimezone(tz.gettz('America/New_York'))}
-Updated: {time2}'''
+Updated: {time2.astimezone(tz.gettz('America/New_York'))}'''
 
     # col1, col2 = st.columns(2)
     # with col1:
