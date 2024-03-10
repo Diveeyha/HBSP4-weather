@@ -8,7 +8,7 @@ import time
 from random import randint
 from time import sleep
 from datetime import datetime, timedelta
-Pipfile => from timezonefinder import TimezoneFinder
+from timezonefinder import TimezoneFinder
 
 from datetime import datetime
 from dateutil import tz
