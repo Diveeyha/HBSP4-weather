@@ -114,7 +114,7 @@ Precip: {precip2:.01f}%, {precip_amount2:.01f}in of {precip_type2}
 Rel Humidity: {rel_hum2}%
 Dewpoint: {dewpoint_F2:.1f}F ({dewpoint_C2:.1f}C)
 Visibility: {vis2:.01f}mi
-Updated: {time2.astimezone(tz.gettz('America/New_York'))}'''
+Last update: {time2.astimezone(tz.gettz('America/New_York'))}'''
 
     # col1, col2 = st.columns(2)
     # with col1:
