@@ -110,7 +110,7 @@ Visibility: {vis2:.01f}mi'''
     #     st.write(f"NOAA  \n{rounded_value} - 5hrs")
     #     st.code(print_out, language='None')
     # with col2:
-    st.write(f"{time2} - 5hrs")
+    st.write(f"{time2} - 4hrs")
     st.code(print_out2, language='None')
 
 
