@@ -40,12 +40,12 @@ def get_info(lat, lon):
             precip_type = i["precipType"]
 
     print_out2 = f'''
-{cloudiness}, {temp_F:.01f}F/{temp_C:.01f}C
-Feel: {feels_likeF:.01f}F/{feels_likeC:.01f}C 
-Wind: {wind_dir}, {wind_speed:.01f} - {wind_gust:.01f}mph
+{cloudiness}, {temp_F:.1f}F/{temp_C:.1f}C
+Feel: {feels_likeF:.1f}F/{feels_likeC:.1f}C 
+Wind: {wind_dir}, {wind_speed:.1f} - {wind_gust:.1f}mph
 Clouds: {cloud_cover}%
-Precip: {precip:.01f}%{'' if precip_amount < 0.1 else f", {precip_amount}in of {precip_type}"}
-Rel Humidity: {rel_hum}%
+Precip: {precip:.1f}%{'' if precip_amount < 0.1 else f", {precip_amount}in of {precip_type}"}
+Rel Humidity: {rel_hum:.1f}%
 Dewpoint: {dewpoint_F:.1f}F ({dewpoint_C:.1f}C)
 Visibility: {vis:.01f}mi
 Last update: {time.astimezone(tz.gettz('America/New_York')).strftime('%Y-%m-%d %H:%M:%S')}'''
