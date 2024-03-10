@@ -82,7 +82,6 @@ def get_info(lat, lon):
     rounded_value = now.replace(second=0, microsecond=0, minute=0, hour=now.hour)
     m_hourly = get_merry_sky(lat, lon)
     adj_now = rounded_value.timestamp()
-    print(adj_now)
     # time2 = datetime.fromtimestamp(adj_now).strftime('%Y-%m-%d %H:%M:%S')
     time2 = datetime.fromtimestamp(adj_now)
     for i in m_hourly:
@@ -146,14 +145,16 @@ def location_value(col, hotspots, x, y):
 
 def main():
     # st.title("Weather")
-    st.subheader("Weather: Hamlin Beach SP--No. 4")
+    st.subheader(f"Weather: [Hamlin Beach SP--No. 4](https://ebird.org/hotspot/L139811)")
     state = "NY"
     hotspot_data = load_eBird_hotspots(state)
 
     site = "Hamlin Beach SP--Parking Lot No. 4 (Primary Lakewatch site)"
     lat_input = location_value('lat', hotspot_data, 'locName', site)
     lon_input = location_value('lng', hotspot_data, 'locName', site)
-    st.write(lat_input, lon_input)
+    # col1, col2 = st.columns(2)
+    # col1.subheader(f"[Hamlin Beach SP--No. 4](https://ebird.org/hotspot/L139811)")
+    # col2.code(f"{lat_input, lon_input}", language='None')
     get_info(lat_input, lon_input)
 
 
